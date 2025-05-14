@@ -1,0 +1,72 @@
+---
+- name: Setup Arch Linux Workstation
+  hosts: all
+  vars_files:
+    - "vars.yml"
+  tasks:
+    - name: "Include packages"
+      ansible.builtin.include_vars:
+        file: "packages.yml"
+
+    - name: "Install basic packages"
+      become: true
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages }}"
+
+    - name: Clone AwesomeWM Config
+      become: true
+      become_user: "{{ user_name }}"
+      ansible.builtin.git:
+        repo: "https://github.com/andreztz/awesome"
+        dest: "{{ home }}/.config/awesome"
+        update: true
+
+    - name: Clone Net Widgets
+      become: true
+      become_user: "{{ user_name }}"
+      ansible.builtin.git:
+        repo: "https://github.com/pltanton/net_widgets.git"
+        dest: "{{ home }}/.config/awesome/net_widgets"
+        update: true
+
+    - name: Clone Vicious Widgets
+      become: true
+      become_user: "{{ user_name }}"
+      ansible.builtin.git:
+        repo: "https://github.com/vicious-widgets/vicious.git"
+        dest: "{{ home }}/.config/awesome/vicious"
+        update: true
+
+    - name: Clone dotfiles
+      become: true
+      become_user: "{{ user_name }}"
+      ansible.builtin.git:
+        repo: "https://github.com/andreztz/dotfiles.git"
+        dest: "{{ home }}/.dotfiles"
+        update: true
+
+    - name: Clone tmux/tpm plugin manager
+      become: true
+      become_user: "{{ user_name }}"
+      ansible.builtin.git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: "{{ home }}/.tmux/plugins/tpm"
+        update: true
+
+    - name: Clone Neovim config files
+      become: true
+      become_user: "{{ user_name }}"
+      ansible.builtin.git:
+        repo: "https://github.com/andreztz/editor.git"
+        dest: "{{ home }}/.config/nvim"
+        update: true
+
+    - name: Clone oh-my-zsh
+      become: true
+      become_user: "{{ user_name }}"
+      ansible.builtin.git:
+        repo: "https://github.com/ohmyzsh/ohmyzsh.git"
+        dest: "{{ home }}/.oh-my-zsh"
+        update: true

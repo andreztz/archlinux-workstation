@@ -1,0 +1,28 @@
+---
+- name: Set up a minimal environment for testing playbook
+  hosts: all
+  tasks:
+    - name: Install GUI
+      become: true
+      ansible.builtin.package:
+        name:
+          - xorg
+          - xorg-xinit
+          - slim
+
+    - name: Enable Slim
+      become: true
+      ansible.builtin.systemd:
+        name: slim
+        state: started
+        enabled: true
+
+    - name: Create xinitrc for the user
+      become: true
+      become_user: "{{ user_name }}"
+      copy:
+        dest: "{{ home }}/.xinitrc"
+        content: "exec awesome"
+        mode: "0644"
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"

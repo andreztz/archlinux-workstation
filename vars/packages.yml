@@ -1,0 +1,51 @@
+packages:
+  - stow
+  - awesome
+  - rofi
+  - picom
+  - zsh
+  - terminology
+  - playerctl
+  - git
+  - gnupg
+  - curl
+  - redshift
+  - which
+  # - xclip
+  # - keepassxc
+  # - beep
+  # - eza
+  # - arandr
+  # - trash-cli
+  # - yazi
+  # - fzf
+  # - nvtop
+  # - man-db
+  # # multimidia
+  # - mpv
+  # - soundconverter
+  # - alsa-tools
+  # - pulsemixer
+  # # development tools
+  # - git
+  # - github-cli
+  # - python-pipx
+  # - tmux
+  # - zeal
+  # - vagrant
+  # - just
+  # # neovim dependencies
+  # - neovim
+  # - nodejs
+  # - npm
+  # - yarn
+  # - ripgrep
+  # - fd
+  # - go
+  # - proton-vpn-gtk-app
+  #
+aur-packages:
+  - redshift-gtk-git AUR
+  - gcolor3
+  - powerkit-git
+  - pomodoro-logger
