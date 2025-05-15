@@ -5,8 +5,17 @@ Vagrant.configure("2") do |config|
   config.vm.box_check_update = true
   config.vm.synced_folder ".", "/vagrant", disabled: false
   config.vm.provider "virtualbox" do |vb|
+    # https://www.virtualbox.org/manual/ch03.html
+    vb.cpus = 2
     vb.gui = true
     vb.memory = "2048"
+    vb.customize [ "modifyvm", :id, "--firmware=efi64"]
+    vb.customize [ "modifyvm", :id, "--vram", 256 ]
+    vb.customize [ "modifyvm", :id, "--audio-driver", "default" ]
+    vb.customize [ "modifyvm", :id, "--audio-enabled", "on" ]
+    vb.customize [ "modifyvm", :id, "--audio-out", "on" ]
+    vb.customize [ "modifyvm", :id, "--graphicscontroller", "vmsvga" ]
+    # vb.customize [ "modifyvm", :id, "--accelerate-3d", "on" ]
   end
 
   config.vm.provision "shell", inline: <<-SHELL
