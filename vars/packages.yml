@@ -13,6 +13,10 @@ packages:
   - which
   - ttf-fantasque-sans-mono
   - ttf-fantasque-nerd
+  - tar
+  - gzip
+  - unzip
+  # - powertop
   # - xclip
   # - keepassxc
   # - beep

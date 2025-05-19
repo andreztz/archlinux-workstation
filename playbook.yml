@@ -2,7 +2,7 @@
 - name: Setup Arch Linux Workstation
   hosts: all
   vars_files:
-    - "vars.yml"
+    - "main.yml"
   tasks:
     - name: "Include packages"
       ansible.builtin.include_vars:
@@ -70,3 +70,25 @@
         repo: "https://github.com/ohmyzsh/ohmyzsh.git"
         dest: "{{ home }}/.oh-my-zsh"
         update: true
+
+    - name: Create directory ~/.local/share/fonts
+      become: true
+      become_user: "{{ user_name }}"
+      ansible.builtin.file:
+        path: "{{ home }}/.local/share/fonts"
+        state: directory
+        mode: "0755"
+
+    - name: Download Fonts
+      ansible.builtin.get_url:
+        url: "{{ item.url }}"
+        dest: "/tmp/{{ item.url | basename }}"
+        mode: "0644"
+      loop: "{{ font_list }}"
+
+    - name: Unpack fonts to ~/.local/share/fonts
+      ansible.builtin.unarchive:
+        src: "/tmp/{{ item.url | basename }}"
+        dest: "{{ home }}/.local/share/fonts"
+        remote_src: true
+      loop: "{{ font_list }}"
