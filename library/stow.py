@@ -100,7 +100,11 @@ def main():
         module: "{{ item }}"
         dest: "/home/user"
         state: present
-      loop: "{{ dotfiles }}"
+      loop:
+        - zsh
+        - bash
+        - tmux
+        - rofi
     """
     arg_spec = {
         "repo": {"type": "str", "required": True},
