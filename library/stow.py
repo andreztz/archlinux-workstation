@@ -6,22 +6,21 @@ from ansible.module_utils.basic import AnsibleModule
 
 def ensure_symlink(src: Path, dest: Path) -> bool:
     """
-    Cria link simbólico de `src` para `dest`.
+    Create a symbolic link from `src` to `dest`.
 
-    Retorna `True` se houve alteração, `False` caso contrário.
+    Returns `True` if a new link was created or replaced otherwise `False` 
+    if the link was already correct.
     """
     if dest.exists():
         if dest.is_symlink():
             if dest.readlink() == src:
-                return False  # symlink já está correto
+                return False
             else:
-                dest.unlink()  # symlink incorreto - apenas remove
+                dest.unlink()
                 return True
         else:
-            # Trata conflito com arquivo/diretório real
             backup_name = f"{dest}.conflict.bak"
             shutil.move(dest, backup_name)
-            # os.remove(dest)
 
     dest.symlink_to(src)
     return True
@@ -29,8 +28,9 @@ def ensure_symlink(src: Path, dest: Path) -> bool:
 
 def remove_symlink(path: Path) -> bool:
     """
-    Remove link simbólico se existir.
-    Retorna `True` se houve alteração, `False` caso contrário.
+    Remove the symbolic link if it exists.
+
+    Returns `True` if the link was removed, otherwise `False`.
     """
     if path.is_symlink():
         path.unlink()
@@ -42,8 +42,14 @@ def process_directory(
     repository: Path, module: str, dest: Path, state: str
 ) -> tuple[bool, list[str]]:
     """
-    Processa módulo de entrada `module`, criando links simbólicos no destino
-    (`dest`) conforme necessário
+    Create or remove symbolic links for a module.
+
+    repository: where modules are stored.
+    module: name of the module to link.
+    destination: where to create the links.
+    state: present, absent, latest, or suppress.
+
+    Returns a tuple (changed, messages).
     """
     changed = False
     messages = []
@@ -85,16 +91,16 @@ def process_directory(
 
 def main():
     """
+    Ansible module for creating symbolic links from dotfiles modules.
+
+    Example use:
     - name: Apply dotfiles
       stow:
-        repo: "/home/ztz/.dotfiles"
+        repo: "/home/user/.dotfiles"
         module: "{{ item }}"
-        dest: "/home/ztz"
+        dest: "/home/user"
         state: present
-      become: true
-      become_user: ztz
       loop: "{{ dotfiles }}"
-
     """
     arg_spec = {
         "repo": {"type": "str", "required": True},
