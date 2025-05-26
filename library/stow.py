@@ -56,10 +56,10 @@ def process_directory(
     module_path = repository.joinpath(module)
 
     if not module_path.is_dir():
-        return changed, [f"src '{module}' não é um diretório válido."]
+        return changed, [f"Source '{module}' is not a valid directory."]
 
     if state == "suppress":
-        return changed, ["Operação suprimida pelo usuário."]
+        return changed, ["Operation was suppressed by user request."]
 
     layout = None
 
@@ -80,12 +80,12 @@ def process_directory(
         changed |= result
         if result:
             messages.append(
-                f"Link criado: {dst} -> {src}"
+                f"Created link: {dst} -> {src}"
             )
     elif state == "absent":
         if remove_symlink(dst):
             changed = True
-            messages.append(f"Link removido: {dst}")
+            messages.append(f"Removed link: {dst}")
     return changed, messages
 
 
