@@ -22,7 +22,11 @@ def ensure_symlink(src: Path, dest: Path) -> bool:
             backup_name = f"{dest}.conflict.bak"
             shutil.move(dest, backup_name)
 
-    dest.symlink_to(src)
+    if dest.is_dir():
+        dest.symlink_to(src, target_is_directory=True)
+    else:
+        dest.symlink_to(src, target_is_directory=False)
+
     return True
 
 
