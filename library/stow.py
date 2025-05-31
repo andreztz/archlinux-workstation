@@ -43,7 +43,7 @@ def remove_symlink(path: Path) -> bool:
 
 
 def process_directory(
-    repository: Path, module: str, dest: Path, state: str
+    repository: Path, module: str, destination: Path, state: str
 ) -> tuple[bool, list[str]]:
     """
     Create or remove symbolic links for a module.
@@ -57,7 +57,7 @@ def process_directory(
     """
     changed = False
     messages = []
-    module_path = repository.joinpath(module)
+    module_path = repository / module
 
     if not module_path.is_dir():
         return changed, [f"Source '{module}' is not a valid directory."]
@@ -65,31 +65,36 @@ def process_directory(
     if state == "suppress":
         return changed, ["Operation was suppressed by user request."]
 
-    layout = None
+    nested_layout = None
 
-    for item in module_path.rglob("*"):
-        if item.name != module and item.is_dir():
-            layout = item.name
+    for subdir in module_path.rglob("*"):
+        # ested_layout -> ~/.dotfiles/rofi/.config/rofi
+        if subdir.name != module and subdir.is_dir():
+            nested_layout = subdir.name
 
-    if layout is None:
-       for item in module_path.iterdir():
-           src = item
-           dst = dest / item.name
+    if nested_layout is None:
+        # Direct layout: module contains files directly
+        # ~/.bashrc -> ~/.dotfiles/bash/.bashrc
+        for item in module_path.iterdir():
+            source = item
+            target = destination / item.name
     else:
-        src = repository / module / layout / module
-        dst = dest / layout / module
+        # Nested layout: module/module_name under layout dir
+        # ~/.config/rofi -> ~/.dotfiles/rofi/.config/rofi
+        source = repository / module / nested_layout / module
+        target = destination / nested_layout / module
 
     if state in {"present", "latest"}:
-        result = ensure_symlink(src, dst)
+        result = ensure_symlink(source, target)
         changed |= result
         if result:
             messages.append(
-                f"Created link: {dst} -> {src}"
+                f"Created link: {target} -> {source}"
             )
     elif state == "absent":
-        if remove_symlink(dst):
+        if remove_symlink(target):
             changed = True
-            messages.append(f"Removed link: {dst}")
+            messages.append(f"Removed link: {target}")
     return changed, messages
 
 
