@@ -70,58 +70,85 @@ def test_remove_symlink():
         assert not link.exists()
 
 
-# def test_process_directory_must_be_return_false_when_src_is_not_dir():
-#     changed, message = process_directory(
-#         module=Path("test"), dest=Path("test"), state="test"
-#     )
-#     assert changed is False
-#     assert message[0] == "src 'test' não é um diretório válido."
-#
-#
-# def test_process_directory_must_be_return_false_when_state_is_suppress():
-#     with tempfile.TemporaryDirectory() as tmp_dir:
-#         changed, message = process_directory(
-#             module=Path(tmp_dir), dest=Path("test"), state="suppress"
-#         )
-#         assert changed is False
-#         assert message[0] == "Operação suprimida pelo usuário."
-
-#
-# def test_process_directory_must_be_return_true_when_state_is_absent():
-#     with tempfile.TemporaryDirectory() as tmp_dir:
-#         home = Path(tmp_dir)
-#         module = home / "module"
-#         module.mkdir(parents=True)
-#         module.joinpath("configfile").touch()
-#
-#         link = home / "link"
-#         link.symlink_to(module)
-#
-#         changed, message = process_directory(
-#             module=module, dest=home / "link", state="absent"
-#         )
-#         assert changed is True
-#         assert message[0] == f"Link removido: {link}."
-
-
-def test_process_directory_must_be_return_link_criado():
+def test_process_directory_should_return_false_when_src_module_is_not_dir():
     with tempfile.TemporaryDirectory() as tmp_dir:
-        destination = Path(tmp_dir)
-        destination.joinpath(".config").mkdir(parents=True)
+        home = Path(tmp_dir)
 
-        dotfiles = Path(tmp_dir).joinpath("dotfiles")
-        ruff = dotfiles / "ruff/.config/ruff"
-        ruff.mkdir(parents=True)
-        ruff.joinpath("configfile").touch()
+        dotfiles = home / ".dotfiles"
+        dotfiles.mkdir(parents=True)
 
         changed, message = process_directory(
             repository=dotfiles,
-            module="ruff",
-            dest=destination,
+            module="test",
+            destination=Path("test"),
+            state="test",
+        )
+        assert changed is False
+        assert message[0] == "Source 'test' is not a valid directory."
+
+
+def test_process_directory_should_return_false_when_state_is_suppress():
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        home = Path(tmp_dir)
+
+        dotfiles = home / ".dotfiles"
+        dotfiles.mkdir(parents=True)
+
+        changed, message = process_directory(
+            repository=dotfiles,
+            module=tmp_dir,
+            destination=Path("test"),
+            state="suppress",
+        )
+        assert changed is False
+        assert message[0] == "Operation was suppressed by user request."
+
+
+#
+def test_process_directory_shoul_remove_link_when_state_is_absent():
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        home = Path(tmp_dir)
+
+        dotfiles = home / ".dotfiles"
+        dotfiles.mkdir(parents=True)
+
+        module = dotfiles / "module"
+        module.mkdir()
+
+        config_file = module / ".config.txt"
+        config_file.write_text("data")
+
+        link = home / ".config.txt"
+        link.symlink_to(config_file)
+
+        changed, message = process_directory(
+            repository=dotfiles,
+            module="module",
+            destination=home,
+            state="absent",
+        )
+
+        assert changed is True
+        assert message[0] == f"Removed link: {link}"
+
+
+def test_process_directory_should_create_symlink_when_state_is_present():
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        home = Path(tmp_dir)
+        home.joinpath(".config").mkdir(parents=True)
+
+        dotfiles = home / ".dotfiles"
+        dotfiles.mkdir()
+
+        module = dotfiles / "module/.config/module"
+        module.mkdir(parents=True)
+        module.joinpath("config.txt").touch()
+
+        changed, message = process_directory(
+            repository=dotfiles,
+            module="module",
+            destination=home,
             state="present",
         )
         assert changed is True
-        assert (
-            message[0]
-            == f"Link criado: {tmp_dir}/.config/ruff -> {tmp_dir}/dotfiles/ruff/.config/ruff"
-        )
+        assert message[0] == f"Created link: {home}/.config/module -> {module}"
