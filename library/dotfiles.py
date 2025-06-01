@@ -101,7 +101,7 @@ def main():
 
     Example use:
     - name: Apply dotfiles
-      stow:
+      dotfiles:
         repo: "/home/user/.dotfiles"
         src: "{{ item }}"
         dest: "/home/user"

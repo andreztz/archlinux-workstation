@@ -1,6 +1,6 @@
 import tempfile
 from pathlib import Path
-from stow import ensure_symlink, process_directory, remove_symlink
+from dotfiles import ensure_symlink, process_directory, remove_symlink
 
 
 def test_symlink_creation_when_absent():
