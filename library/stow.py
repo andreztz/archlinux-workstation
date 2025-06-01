@@ -4,28 +4,28 @@ import shutil
 from ansible.module_utils.basic import AnsibleModule
 
 
-def ensure_symlink(src: Path, dest: Path) -> bool:
+def ensure_symlink(source: Path, target: Path) -> bool:
     """
-    Create a symbolic link from `src` to `dest`.
+    Create a symbolic link from `source` to `target`.
 
     Returns `True` if a new link was created or replaced otherwise `False`
     if the link was already correct.
     """
-    if dest.exists():
-        if dest.is_symlink():
-            if dest.readlink() == src:
+    if target.exists():
+        if target.is_symlink():
+            if target.readlink() == source:
                 return False
             else:
-                dest.unlink()
+                target.unlink()
                 return True
         else:
-            backup_name = f"{dest}.conflict.bak"
-            shutil.move(dest, backup_name)
+            backup_name = f"{target}.conflict.bak"
+            shutil.move(target, backup_name)
 
-    if dest.is_dir():
-        dest.symlink_to(src, target_is_directory=True)
+    if target.is_dir():
+        target.symlink_to(source, target_is_directory=True)
     else:
-        dest.symlink_to(src, target_is_directory=False)
+        target.symlink_to(source, target_is_directory=False)
 
     return True
 
