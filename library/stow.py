@@ -42,15 +42,17 @@ def remove_symlink(path: Path) -> bool:
     return False
 
 
-def resolve_paths(package_path: Path, destination: Path, repository: Path) -> tuple[Path, Path]:
+def resolve_paths(
+    package: Path, destination: Path, repository: Path
+) -> tuple[Path, Path]:
     """Resolve source and target paths for a given package."""
-    for item in package_path.rglob("*"):
+    for item in package.rglob("*"):
         if item.is_file() and (item.parent.parent).name == repository.name:
             source = item
-            target = destination / item.relative_to(package_path)
+            target = destination / item.relative_to(package)
         elif item.is_dir() and (item.parent.parent).name != repository.name:
             source = item
-            target = destination / item.relative_to(package_path)
+            target = destination / item.relative_to(package)
     return source, target
 
 
