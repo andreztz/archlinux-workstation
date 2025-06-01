@@ -8,7 +8,7 @@ def ensure_symlink(src: Path, dest: Path) -> bool:
     """
     Create a symbolic link from `src` to `dest`.
 
-    Returns `True` if a new link was created or replaced otherwise `False` 
+    Returns `True` if a new link was created or replaced otherwise `False`
     if the link was already correct.
     """
     if dest.exists():
@@ -42,6 +42,18 @@ def remove_symlink(path: Path) -> bool:
     return False
 
 
+def resolve_paths(module_path: Path, destination: Path, repository: Path) -> tuple[Path, Path]:
+    """Resolve source and target paths for a given module."""
+    for item in module_path.rglob("*"):
+        if item.is_file() and (item.parent.parent).name == repository.name:
+            source = item
+            target = destination / item.relative_to(module_path)
+        elif item.is_dir() and (item.parent.parent).name != repository.name:
+            source = item
+            target = destination / item.relative_to(module_path)
+    return source, target
+
+
 def process_directory(
     repository: Path, module: str, destination: Path, state: str
 ) -> tuple[bool, list[str]]:
@@ -65,36 +77,20 @@ def process_directory(
     if state == "suppress":
         return changed, ["Operation was suppressed by user request."]
 
-    nested_layout = None
+    source, target = resolve_paths(module_path, destination, repository)
 
-    for subdir in module_path.rglob("*"):
-        # ested_layout -> ~/.dotfiles/rofi/.config/rofi
-        if subdir.name != module and subdir.is_dir():
-            nested_layout = subdir.name
-
-    if nested_layout is None:
-        # Direct layout: module contains files directly
-        # ~/.bashrc -> ~/.dotfiles/bash/.bashrc
-        for item in module_path.iterdir():
-            source = item
-            target = destination / item.name
-    else:
-        # Nested layout: module/module_name under layout dir
-        # ~/.config/rofi -> ~/.dotfiles/rofi/.config/rofi
-        source = repository / module / nested_layout / module
-        target = destination / nested_layout / module
-
-    if state in {"present", "latest"}:
-        result = ensure_symlink(source, target)
-        changed |= result
-        if result:
-            messages.append(
-                f"Created link: {target} -> {source}"
-            )
-    elif state == "absent":
-        if remove_symlink(target):
-            changed = True
-            messages.append(f"Removed link: {target}")
+    match state:
+        case "present" | "latest":
+            result = ensure_symlink(source, target)
+            changed |= result
+            if result:
+                messages.append(f"Created link: {target} -> {source}")
+        case "absent":
+            if remove_symlink(target):
+                changed = True
+                messages.append(f"Removed link: {target}")
+        case _:
+            messages.append(f"Unknown state: {state}")
     return changed, messages
 
 
