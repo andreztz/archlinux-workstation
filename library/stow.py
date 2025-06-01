@@ -74,12 +74,11 @@ def process_directory(
     if not module_path.is_dir():
         return changed, [f"Source '{module}' is not a valid directory."]
 
-    if state == "suppress":
-        return changed, ["Operation was suppressed by user request."]
-
     source, target = resolve_paths(module_path, destination, repository)
 
     match state:
+        case "suppress":
+            messages.append("Operation was suppressed by user request.")
         case "present" | "latest":
             result = ensure_symlink(source, target)
             changed |= result
