@@ -70,7 +70,7 @@ def test_remove_symlink():
         assert not link.exists()
 
 
-def test_process_directory_should_return_false_when_src_module_is_not_dir():
+def test_process_directory_should_return_false_when_src_package_is_not_dir():
     with tempfile.TemporaryDirectory() as tmp_dir:
         home = Path(tmp_dir)
 
@@ -79,7 +79,7 @@ def test_process_directory_should_return_false_when_src_module_is_not_dir():
 
         changed, message = process_directory(
             repository=dotfiles,
-            module="test",
+            package="test",
             destination=Path("test"),
             state="test",
         )
@@ -96,7 +96,7 @@ def test_process_directory_should_return_false_when_state_is_suppress():
 
         changed, message = process_directory(
             repository=dotfiles,
-            module=tmp_dir,
+            package=tmp_dir,
             destination=Path("test"),
             state="suppress",
         )
@@ -112,10 +112,10 @@ def test_process_directory_shoul_remove_link_when_state_is_absent():
         dotfiles = home / ".dotfiles"
         dotfiles.mkdir(parents=True)
 
-        module = dotfiles / "module"
-        module.mkdir()
+        package = dotfiles / "package"
+        package.mkdir()
 
-        config_file = module / ".config.txt"
+        config_file = package / ".config.txt"
         config_file.write_text("data")
 
         link = home / ".config.txt"
@@ -123,7 +123,7 @@ def test_process_directory_shoul_remove_link_when_state_is_absent():
 
         changed, message = process_directory(
             repository=dotfiles,
-            module="module",
+            package="package",
             destination=home,
             state="absent",
         )
@@ -140,15 +140,15 @@ def test_process_directory_should_create_symlink_when_state_is_present():
         dotfiles = home / ".dotfiles"
         dotfiles.mkdir()
 
-        module = dotfiles / "module/.config/module"
-        module.mkdir(parents=True)
-        module.joinpath("config.txt").touch()
+        package = dotfiles / "package/.config/package"
+        package.mkdir(parents=True)
+        package.joinpath("config.txt").touch()
 
         changed, message = process_directory(
             repository=dotfiles,
-            module="module",
+            package="package",
             destination=home,
             state="present",
         )
         assert changed is True
-        assert message[0] == f"Created link: {home}/.config/module -> {module}"
+        assert message[0] == f"Created link: {home}/.config/package -> {package}"

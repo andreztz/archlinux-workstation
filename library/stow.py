@@ -42,26 +42,26 @@ def remove_symlink(path: Path) -> bool:
     return False
 
 
-def resolve_paths(module_path: Path, destination: Path, repository: Path) -> tuple[Path, Path]:
-    """Resolve source and target paths for a given module."""
-    for item in module_path.rglob("*"):
+def resolve_paths(package_path: Path, destination: Path, repository: Path) -> tuple[Path, Path]:
+    """Resolve source and target paths for a given package."""
+    for item in package_path.rglob("*"):
         if item.is_file() and (item.parent.parent).name == repository.name:
             source = item
-            target = destination / item.relative_to(module_path)
+            target = destination / item.relative_to(package_path)
         elif item.is_dir() and (item.parent.parent).name != repository.name:
             source = item
-            target = destination / item.relative_to(module_path)
+            target = destination / item.relative_to(package_path)
     return source, target
 
 
 def process_directory(
-    repository: Path, module: str, destination: Path, state: str
+    repository: Path, package: str, destination: Path, state: str
 ) -> tuple[bool, list[str]]:
     """
-    Create or remove symbolic links for a module.
+    Create or remove symbolic links for a package.
 
-    repository: where modules are stored.
-    module: name of the module to link.
+    repository: where packages are stored.
+    package: name of the package to link.
     destination: where to create the links.
     state: present, absent, latest, or suppress.
 
@@ -69,12 +69,12 @@ def process_directory(
     """
     changed = False
     messages = []
-    module_path = repository / module
+    package_path = repository / package
 
-    if not module_path.is_dir():
-        return changed, [f"Source '{module}' is not a valid directory."]
+    if not package_path.is_dir():
+        return changed, [f"Source '{package}' is not a valid directory."]
 
-    source, target = resolve_paths(module_path, destination, repository)
+    source, target = resolve_paths(package_path, destination, repository)
 
     match state:
         case "suppress":
@@ -95,13 +95,13 @@ def process_directory(
 
 def main():
     """
-    Ansible module for creating symbolic links from dotfiles modules.
+    Ansible module for creating symbolic links from dotfiles packages.
 
     Example use:
     - name: Apply dotfiles
       stow:
         repo: "/home/user/.dotfiles"
-        module: "{{ item }}"
+        src: "{{ item }}"
         dest: "/home/user"
         state: present
       loop:
@@ -112,7 +112,7 @@ def main():
     """
     arg_spec = {
         "repo": {"type": "str", "required": True},
-        "module": {"type": "str", "required": True},
+        "src": {"type": "str", "required": True},
         "dest": {"type": "str", "required": True},
         "state": {
             "type": "str",
@@ -126,12 +126,12 @@ def main():
     )
 
     repository = Path(ansible_module.params["repo"])
-    module = ansible_module.params["module"]
+    package = ansible_module.params["src"]
     dest = Path(ansible_module.params["dest"])
     state = ansible_module.params["state"]
 
     try:
-        changed, messages = process_directory(repository, module, dest, state)
+        changed, messages = process_directory(repository, package, dest, state)
         ansible_module.exit_json(changed=changed, msg=messages)
     except Exception as exc:
         ansible_module.fail_json(msg=str(exc))
