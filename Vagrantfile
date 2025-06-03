@@ -19,7 +19,9 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", inline: <<-SHELL
-    sudo pacman -Syu --noconfirm
+    sudo pacman -Sy --noconfirm
+    sudo pacman -S --noconfirm --needed archlinux-keyring
+    sudo pacman -Syu
     sudo pacman -S --needed --noconfirm sudo
     # virtualbox-guest-utils-nox é somente para ambiente texto
     sudo pacman -R virtualbox-guest-utils-nox --noconfirm
