@@ -4,31 +4,36 @@ Vagrant.configure("2") do |config|
   config.vm.box = "generic/arch"
   config.vm.box_check_update = true
   config.vm.synced_folder ".", "/vagrant", disabled: false
-  # config.vm.provider "virtualbox" do |vb|
-  #   # https://www.virtualbox.org/manual/ch03.html
-  #   vb.cpus = 2
-  #   vb.gui = true
-  #   vb.memory = "2048"
-  #   vb.customize [ "modifyvm", :id, "--firmware=bios"]
-  #   vb.customize [ "modifyvm", :id, "--vram", 256 ]
-  #   vb.customize [ "modifyvm", :id, "--audio-driver", "default" ]
-  #   vb.customize [ "modifyvm", :id, "--audio-enabled", "on" ]
-  #   vb.customize [ "modifyvm", :id, "--audio-out", "on" ]
-  #   vb.customize [ "modifyvm", :id, "--graphicscontroller", "vmsvga" ]
-  #   # vb.customize [ "modifyvm", :id, "--accelerate-3d", "on" ]
-  # end
-  # WARNING:
-  # vagrant plugin install vagrant-libvirt
-  config.vm.provider :libvirt do | libvirt |
-    libvirt.memory = 2048
-    libvirt.cpus = 2
-    libvirt.uri = 'qemu:///session'
-    libvirt.qemu_use_session = true
-    libvirt.management_network_device = 'virbr0'
 
-    libvirt.graphics_type = "spice"
-    libvirt.video_type = "qxl"
+  if Vagrant.has_plugin?("vagrant-libvirt")
+    # WARNING:
+    # vagrant plugin install vagrant-libvirt
+    # virt-viewer --connect qemu:///session archlinux-workstation_default --attach
+    config.vm.provider :libvirt do | libvirt |
+      libvirt.memory = 2048
+      libvirt.cpus = 2
+      libvirt.uri = 'qemu:///session'
+      libvirt.qemu_use_session = true
+      libvirt.management_network_device = 'virbr0'
+      # libvirt.graphics_type = "spice"
+      # libvirt.video_type = "qxl"
+    end
+  else
+    config.vm.provider "virtualbox" do |vb|
+      # https://www.virtualbox.org/manual/ch03.html
+      vb.cpus = 2
+      vb.gui = true
+      vb.memory = "2048"
+      vb.customize [ "modifyvm", :id, "--firmware", "efi"]
+      vb.customize [ "modifyvm", :id, "--vram", 256 ]
+      vb.customize [ "modifyvm", :id, "--audio-driver", "default" ]
+      vb.customize [ "modifyvm", :id, "--audio-enabled", "on" ]
+      vb.customize [ "modifyvm", :id, "--audio-out", "on" ]
+      vb.customize [ "modifyvm", :id, "--graphicscontroller", "vmsvga" ]
+      # vb.customize [ "modifyvm", :id, "--accelerate-3d", "on" ]
+    end
   end
+
 
   config.vm.provision "shell", inline: <<-SHELL
     sudo pacman -Sy --noconfirm
