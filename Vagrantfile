@@ -62,4 +62,9 @@ Vagrant.configure("2") do |config|
     ansible.inventory_path = "hosts.ini"
     ansible.verbose = true
   end
+
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo pacman -R picom --noconfirm
+    killall picom 2> /dev/null || true
+  SHELL
 end
