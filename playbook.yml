@@ -21,7 +21,7 @@
       ansible.builtin.git:
         repo: "https://github.com/andreztz/awesome"
         dest: "{{ home }}/.config/awesome"
-        update: true
+        update: "{{ sync_git_repo }}"
 
     - name: Clone Net Widgets
       become: true
@@ -29,7 +29,7 @@
       ansible.builtin.git:
         repo: "https://github.com/pltanton/net_widgets.git"
         dest: "{{ home }}/.config/awesome/net_widgets"
-        update: true
+        update: "{{ sync_git_repo }}"
 
     - name: Clone Vicious Widgets
       become: true
@@ -37,7 +37,7 @@
       ansible.builtin.git:
         repo: "https://github.com/vicious-widgets/vicious.git"
         dest: "{{ home }}/.config/awesome/vicious"
-        update: true
+        update: "{{ sync_git_repo }}"
 
     - name: Clone dotfiles
       become: true
@@ -45,7 +45,7 @@
       ansible.builtin.git:
         repo: "https://github.com/andreztz/dotfiles.git"
         dest: "{{ home }}/.dotfiles"
-        update: true
+        update: "{{ sync_git_repo }}"
 
     - name: Clone tmux/tpm plugin manager
       become: true
@@ -53,7 +53,7 @@
       ansible.builtin.git:
         repo: https://github.com/tmux-plugins/tpm
         dest: "{{ home }}/.tmux/plugins/tpm"
-        update: true
+        update: "{{ sync_git_repo }}"
 
     - name: Clone Neovim config files
       become: true
@@ -61,7 +61,7 @@
       ansible.builtin.git:
         repo: "https://github.com/andreztz/editor.git"
         dest: "{{ home }}/.config/nvim"
-        update: true
+        update: "{{ sync_git_repo }}"
 
     - name: Clone oh-my-zsh
       become: true
@@ -69,7 +69,7 @@
       ansible.builtin.git:
         repo: "https://github.com/ohmyzsh/ohmyzsh.git"
         dest: "{{ home }}/.oh-my-zsh"
-        update: true
+        update: "{{ sync_git_repo }}"
 
     - name: Create directory ~/.local/share/fonts
       become: true
