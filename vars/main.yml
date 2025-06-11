@@ -1,2 +1,17 @@
 font_list:
   - url: "https://github.com/thep0y/monaco-nerd-font/releases/download/v0.2.1/MonacoNerdFontMono.zip"
+
+dotfiles:
+  - bash
+  - zsh
+  - tmux
+  - git
+  - rofi
+  - ruff
+  - redshift
+  - picom
+  - streamlink
+  - kitty
+  - greenclip
+
+sync_git_repo: false
