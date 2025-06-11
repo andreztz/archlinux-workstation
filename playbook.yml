@@ -92,3 +92,11 @@
         dest: "{{ home }}/.local/share/fonts"
         remote_src: true
       loop: "{{ font_list }}"
+
+    - name: Apply dotfileis
+      dotfiles:
+        src: "{{ item }}"
+        repo: "{{ home }}/.dotfiles"
+        dest: "{{ home }}"
+        state: present
+      loop: "{{ dotfiles }}"
