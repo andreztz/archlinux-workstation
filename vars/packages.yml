@@ -1,10 +1,13 @@
 packages:
-  - stow
+  - xdg-utils
+  - xorg
+  - xorg-xinit
   - awesome
   - rofi
   - picom
   - zsh
   - terminology
+  - kitty
   - playerctl
   - git
   - gnupg
@@ -16,42 +19,46 @@ packages:
   - tar
   - gzip
   - unzip
-  # - powertop
-  # - xclip
-  # - keepassxc
-  # - beep
-  # - eza
-  # - arandr
-  # - trash-cli
-  # - yazi
-  # - fzf
-  # - nvtop
-  # - man-db
-  # # multimidia
-  # - mpv
-  # - soundconverter
-  # - alsa-tools
-  # - pulsemixer
-  # # development tools
-  # - git
-  # - github-cli
-  # - python-pipx
-  # - tmux
-  # - zeal
-  # - vagrant
-  # - just
-  # # neovim dependencies
-  # - neovim
-  # - nodejs
-  # - npm
-  # - yarn
-  # - ripgrep
-  # - fd
-  # - go
-  # - proton-vpn-gtk-app
-  #
+  - tmux
+  - network-manager-applet
+  - powertop
+  - xclip
+  - keepassxc
+  - beep
+  - eza
+  - arandr
+  - trash-cli
+  - yazi
+  - fzf
+  - nvtop
+  - man-db
+  # multimidia
+  - pipewire        # WARNING: pipewire, wireplumber e pipewire-pulse é necessário
+  - wireplumber     # inicializar a unidade de serviço como usuário (--user)
+  - pipewire-pulse
+  - alsa-tools
+  - pulsemixer
+  - mpv
+  - soundconverter
+  # development tools
+  - git
+  - github-cli
+  - python-pipx
+  - zeal
+  - just
+  # neovim dependencies
+  - neovim
+  - nodejs
+  - npm
+  - yarn
+  - ripgrep
+  - fd
+  - go
+  - proton-vpn-gtk-app
+
 aur-packages:
   - redshift-gtk-git AUR
   - gcolor3
   - powerkit-git
   - pomodoro-logger
+  - vagrant
