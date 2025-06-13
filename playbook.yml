@@ -100,3 +100,11 @@
         dest: "{{ home }}"
         state: present
       loop: "{{ dotfiles }}"
+
+    - name: Install uv
+      become: false
+      become_user: "{{ user_name }}"
+      ansible.builtin.shell: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+      args:
+        creates: "{{ lookup('ansible.builtin.env', 'HOME') }}/.local/bin/uv"
