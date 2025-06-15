@@ -39,6 +39,7 @@ packages:
   - alsa-tools
   - pulsemixer
   - mpv
+  - celluloid
   - soundconverter
   # development tools
   - git
