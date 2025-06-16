@@ -33,6 +33,7 @@ packages:
   - nvtop
   - man-db
   - pcmanfm-gtk3
+  - zk
   # multimidia
   - pipewire        # WARNING: pipewire, wireplumber e pipewire-pulse é necessário
   - wireplumber     # inicializar a unidade de serviço como usuário (--user)
