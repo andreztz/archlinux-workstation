@@ -32,6 +32,7 @@ packages:
   - fzf
   - nvtop
   - man-db
+  - polkit-gnome
   - pcmanfm-gtk3
   - zk
   # multimidia
