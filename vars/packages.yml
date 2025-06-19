@@ -59,6 +59,7 @@ packages:
   - fd
   - go
   - proton-vpn-gtk-app
+  - newsflash
 
 aur-packages:
   - redshift-gtk-git AUR
