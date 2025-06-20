@@ -60,6 +60,8 @@ packages:
   - go
   - proton-vpn-gtk-app
   - newsflash
+  - breeze
+  - breeze-gtk
 
 aur-packages:
   - redshift-gtk-git AUR
