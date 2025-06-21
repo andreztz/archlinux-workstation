@@ -62,6 +62,8 @@ packages:
   - newsflash
   - breeze
   - breeze-gtk
+  - firewalld
+  - python-pyqt6
 
 aur-packages:
   - redshift-gtk-git AUR
