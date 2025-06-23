@@ -9,6 +9,8 @@ packages:
   - terminology
   - kitty
   - playerctl
+  - udiskie
+  - udisks2
   - git
   - gnupg
   - pinentry
