@@ -67,6 +67,8 @@ packages:
   - breeze-gtk
   - firewalld
   - python-pyqt6
+  - opensnitch
+  - python-qt-material
 
 aur-packages:
   - redshift-gtk-git AUR
