@@ -38,6 +38,7 @@ packages:
   - polkit-gnome
   - pcmanfm-gtk3
   - zk
+  - bash-completion
   # multimidia
   - pipewire        # WARNING: pipewire, wireplumber e pipewire-pulse é necessário
   - wireplumber     # inicializar a unidade de serviço como usuário (--user)
