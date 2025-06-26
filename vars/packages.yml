@@ -39,6 +39,7 @@ packages:
   - pcmanfm-gtk3
   - zk
   - bash-completion
+  - foliate
   # multimidia
   - pipewire        # WARNING: pipewire, wireplumber e pipewire-pulse é necessário
   - wireplumber     # inicializar a unidade de serviço como usuário (--user)
