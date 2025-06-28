@@ -1,4 +1,6 @@
 packages:
+  - linux-lts
+  - linux-lts-headers
   - xdg-utils
   - xorg
   - xorg-xinit
